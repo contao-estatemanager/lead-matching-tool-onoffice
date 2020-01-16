@@ -1,0 +1,37 @@
+{
+  "name":"contao-estatemanager/lead-matching-tool-onoffice",
+  "description":"Lead-Matching-Tool Extension for Contao EstateManager with onOffice support",
+  "keywords":["contao","estatemanager","real estate","estate","property", "lead", "onoffice"],
+  "homepage":"https://www.contao-estatemanager.com/",
+  "license":"proprietary",
+  "authors":[
+    {
+      "name":"Oveleon",
+      "homepage":"https://www.oveleon.de/",
+      "role":"Developer"
+    }
+  ],
+  "require":{
+    "oveleon/contao-onoffice-api-bundle": "^1.0",
+    "contao-estatemanager/lead-matching-tool": "dev-master",
+    "contao-estatemanager/region-entity-onoffice": "dev-master",
+    "contao-estatemanager/object-type-entity-onoffice": "dev-master"
+  },
+  "autoload":{
+    "psr-4": {
+      "ContaoEstateManager\\LeadMatchingToolOnOffice\\": "src/"
+    },
+    "classmap": [
+      "src/Resources/contao/"
+    ],
+    "exclude-from-classmap": [
+      "src/Resources/contao/config/",
+      "src/Resources/contao/dca/",
+      "src/Resources/contao/languages/",
+      "src/Resources/contao/templates/"
+    ]
+  },
+  "extra":{
+    "contao-manager-plugin": "ContaoEstateManager\\LeadMatchingToolOnOffice\\ContaoManager\\Plugin"
+  }
+}

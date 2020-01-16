@@ -1,0 +1,33 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_lead_matching_meta.php" source-language="en">
+    <body>
+      <trans-unit id="tl_lead_matching_meta.Id">
+        <source>ID</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.from">
+        <source>from</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.to">
+        <source>to</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.from_to_value">
+        <source>%s to %s</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.from_value">
+        <source>from %s</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.to_value">
+        <source>to %s</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.suffix_room">
+        <source>Rooms</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.suffix_currency">
+        <source>€</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching_meta.suffix_area">
+        <source>m²</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

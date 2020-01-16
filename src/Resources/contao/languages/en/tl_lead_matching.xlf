@@ -1,0 +1,63 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_lead_matching.php" source-language="en">
+    <body>
+      <trans-unit id="tl_lead_matching.mapping_legend">
+        <source>Field mapping</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mappingFields.0">
+        <source>Mapping fields</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mappingFields.1">
+        <source>Please specify how internal fields should be transmitted to the API. (Note that all selected fields under "Real Estate form fields" must be defined here!)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_marketingType.0">
+        <source>Marketing type (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_marketingType.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_objectTypes.0">
+        <source>Object types (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_objectTypes.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_regions.0">
+        <source>Regions (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_regions.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_room.0">
+        <source>Rooms (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_room.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_area.0">
+        <source>Area (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_area.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_price_kauf.0">
+        <source>Price: Buy (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_price_kauf.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_price_miete.0">
+        <source>Price: Rent (Mapping)</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.mapping_price_miete.1">
+        <source>Please specify how this field should be passed to the API.</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.groupRelatedFields.0">
+        <source>Group related fields</source>
+      </trans-unit>
+      <trans-unit id="tl_lead_matching.groupRelatedFields.1">
+        <source>Groups related fields and outputs them as from to values.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
