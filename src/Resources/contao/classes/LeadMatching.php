@@ -83,6 +83,8 @@ class LeadMatching extends \Backend
             $_GET['outputall'] = true;
         }
 
+        #$_GET['outputfields'] = array('Id');
+
         $data = $this->call('search', 'searchcriteria');
 
         if(!$data['status']['errorcode'])
@@ -640,7 +642,7 @@ class LeadMatching extends \Backend
                 $return[ $config->{$to} ] =  $varValue;
             }
         }
-        
+
         if($config->marketingType)
         {
             $return[ $config->mapping_marketingType ] = $config->marketingType;
