@@ -8,7 +8,7 @@
  * @license   https://www.contao-estatemanager.com/lizenzbedingungen.html
  */
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['palettes']['onoffice'] = '{title_legend},title,type;{config_legend},marketingType;{mapping_legend},mapping_marketingType,mapping_objectTypes,mapping_regions,mapping_room,mapping_area,mapping_price_kauf,mapping_price_miete;{field_legend},marketingTypes,addBlankMarketingType,objectTypes,addBlankObjectType,regions,addBlankRegion;{searchcriteria_legend},listMetaFields,countResults,numberOfItems,perPage,listItemTemplate,groupRelatedFields;{estate_form_legend},addEstateForm;{contact_form_legend},addContactForm;';
+$GLOBALS['TL_DCA']['tl_lead_matching']['palettes']['onoffice'] = '{title_legend},title,type;{config_legend},marketingType;{mapping_legend},mapping_marketingType,mapping_objectTypes,mapping_regions,mapping_room,mapping_area,mapping_price_kauf,mapping_price_miete;{field_legend},marketingTypes,addBlankMarketingType,objectTypes,addBlankObjectType,regions,addBlankRegion;{searchcriteria_legend},listMetaFields,txtListHeadline,txtListDescription,numberOfItems,perPage,groupRelatedFields,countResults,listItemTemplate;{estate_form_legend},addEstateForm;{contact_form_legend},addContactForm;';
 
 // Add field options
 $GLOBALS['TL_DCA']['tl_lead_matching']['fields']['type']['options'][] = 'onoffice';
