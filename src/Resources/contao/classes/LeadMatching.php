@@ -83,8 +83,6 @@ class LeadMatching extends \Backend
             $_GET['outputall'] = true;
         }
 
-        #$_GET['outputfields'] = array('Id');
-
         $data = $this->call('search', 'searchcriteria');
 
         if(!$data['status']['errorcode'])
@@ -632,6 +630,11 @@ class LeadMatching extends \Backend
                 $arrMappings = array('price' => 'mapping_price_' . $choosedMarketingType) + $arrMappings;
             }
         }
+        else
+        {
+            $return[ $config->mapping_marketingType ] = $config->marketingType;
+            $arrMappings = array('price' => 'mapping_price_' . $config->marketingType) + $arrMappings;
+        }
 
         foreach ($arrMappings as $from => $to)
         {
@@ -641,11 +644,6 @@ class LeadMatching extends \Backend
             {
                 $return[ $config->{$to} ] =  $varValue;
             }
-        }
-
-        if($config->marketingType)
-        {
-            $return[ $config->mapping_marketingType ] = $config->marketingType;
         }
 
         return $return;
