@@ -80,13 +80,6 @@ $GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_price_miete'] = array(
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['groupRelatedFields'] = array(
-    'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['groupRelatedFields'],
-    'inputType'        => 'checkbox',
-    'eval'             => array('tl_class'=>'w50 m12'),
-    'sql'              => "char(1) NOT NULL default '1'"
-);
-
 /*$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mappingFields'] = array(
     'label'     => &$GLOBALS['TL_LANG']['tl_lead_matching']['mappingFields'],
     'inputType' => 'multiColumnWizard',

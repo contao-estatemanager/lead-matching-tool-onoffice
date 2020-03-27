@@ -9,8 +9,16 @@
  */
 
 if(ContaoEstateManager\LeadMatchingTool\AddonManager::valid()) {
+    // Hooks
     $GLOBALS['TL_HOOKS']['countLeadMatching'][] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'onLoadCount');
     $GLOBALS['TL_HOOKS']['fetchLeadMatching'][] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'fetch');
     $GLOBALS['TL_HOOKS']['parseLeadMatchingItems'][] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'parseItems');
     $GLOBALS['TL_HOOKS']['readCountLeadMatching'][] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'onReadCount');
+
+    // Back end modules
+    array_insert($GLOBALS['BE_MOD']['real_estate']['searchcriteria'], 1, array
+    (
+        'importSearchInquiries' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\ImportSearchInquiries', 'importInquiries')
+    ));
+
 }

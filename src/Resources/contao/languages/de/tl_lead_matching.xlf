@@ -69,13 +69,13 @@
         <source>Please specify how this field should be passed to the API.</source>
         <target>Bitte geben Sie an, wie diese Feld an die API übergeben werden soll.</target>
       </trans-unit>
-      <trans-unit id="tl_lead_matching.groupRelatedFields.0">
-        <source>Group related fields</source>
-        <target>Zusammenhängende Felder gruppieren</target>
+      <trans-unit id="tl_lead_matching.mapping_range.0">
+        <source>Range (Mapping)</source>
+        <target>Umkreis (Zuordnung)</target>
       </trans-unit>
-      <trans-unit id="tl_lead_matching.groupRelatedFields.1">
-        <source>Groups related fields and outputs them as from to values.</source>
-        <target>Gruppiert zusammenhängende Felder und gibt diese als von bis  Werte aus.</target>
+      <trans-unit id="tl_lead_matching.mapping_range.1">
+        <source>Please specify how this field should be passed to the API.</source>
+        <target>Bitte geben Sie an, wie diese Feld an die API übergeben werden soll.</target>
       </trans-unit>
     </body>
   </file>

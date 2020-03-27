@@ -1,6 +1,10 @@
 <?xml version="1.0" ?><xliff version="1.1">
   <file datatype="php" original="src/Resources/contao/languages/en/tl_lead_matching_meta.php" source-language="en" target-language="de">
     <body>
+      <trans-unit id="tl_lead_matching_meta.oid">
+        <source>ID</source>
+        <target>ID</target>
+      </trans-unit>
       <trans-unit id="tl_lead_matching_meta.Id">
         <source>ID</source>
         <target>ID</target>

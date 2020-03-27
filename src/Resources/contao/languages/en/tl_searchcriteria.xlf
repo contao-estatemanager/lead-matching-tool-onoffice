@@ -1,0 +1,51 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_searchcriteria.php" source-language="en">
+    <body>
+      <trans-unit id="tl_searchcriteria.importConfirm">
+        <source>Synchronization adds new records and overwrites records that already exist.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.deleteConfirm">
+        <source>Data records were deleted</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.importComplete">
+        <source>The import was carried out successfully.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.emptyRecords">
+        <source>No regions were returned by onOffice.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.importSearchInquiries.0">
+        <source>Sync onOffice search inquiries</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.importSearchInquiries.1">
+        <source>Sync onOffice search inquiries</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.indexLoading">
+        <source>Please wait while the synchronization is being running. The process may take a few minutes.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.indexComplete">
+        <source>The synchronization has been finished. You can now proceed.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.indexContinue">
+        <source>Continue</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.data">
+        <source>Records to be synchronized</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.truncate.0">
+        <source>Delete old records</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.truncate.1">
+        <source>Please note that all data records are deleted, regardless of whether they were created via import or manually.</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.all">
+        <source>All</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.buy">
+        <source>Buy</source>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.rent">
+        <source>Rent</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

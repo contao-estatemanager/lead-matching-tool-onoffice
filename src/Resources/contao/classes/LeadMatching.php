@@ -412,7 +412,9 @@ class LeadMatching extends \Backend
 
         if(!$returnData)
         {
-            $return = array('Id' => 'ID');
+            $return = array(
+                'Id' => 'ID'
+            );
         }
 
         $fields = Fieldset::getInstance()->get('searchcriteriafields');
@@ -615,10 +617,11 @@ class LeadMatching extends \Backend
     {
         $return = array();
         $arrMappings = array(
-            'objectTypes' => 'mapping_objectTypes',
-            'regions'     => 'mapping_regions',
-            'room'        => 'mapping_room',
-            'area'        => 'mapping_area'
+            'objectTypes'           => 'mapping_objectTypes',
+            'regions'               => 'mapping_regions',
+            'range'                 => 'mapping_range',
+            'room'                  => 'mapping_room',
+            'area'                  => 'mapping_area'
         );
 
         if(!$config->marketingType)

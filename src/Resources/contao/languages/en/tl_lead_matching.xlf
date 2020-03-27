@@ -52,12 +52,6 @@
       <trans-unit id="tl_lead_matching.mapping_price_miete.1">
         <source>Please specify how this field should be passed to the API.</source>
       </trans-unit>
-      <trans-unit id="tl_lead_matching.groupRelatedFields.0">
-        <source>Group related fields</source>
-      </trans-unit>
-      <trans-unit id="tl_lead_matching.groupRelatedFields.1">
-        <source>Groups related fields and outputs them as from to values.</source>
-      </trans-unit>
     </body>
   </file>
 </xliff>

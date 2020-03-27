@@ -12,13 +12,17 @@ declare(strict_types=1);
 
 namespace ContaoEstateManager\LeadMatchingToolOnOffice\ContaoManager;
 
+use ContaoEstateManager\LeadMatchingTool\EstateManagerLeadMatchingTool;
 use Contao\ManagerPlugin\Bundle\BundlePluginInterface;
 use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
-use ContaoEstateManager\LeadMatchingTool\EstateManagerLeadMatchingTool;
 use ContaoEstateManager\LeadMatchingToolOnOffice\EstateManagerLeadMatchingToolOnOffice;
 
-class Plugin implements BundlePluginInterface
+use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
+use Symfony\Component\Config\Loader\LoaderResolverInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+class Plugin implements BundlePluginInterface, RoutingPluginInterface
 {
     /**
      * {@inheritdoc}
@@ -30,5 +34,16 @@ class Plugin implements BundlePluginInterface
                 ->setLoadAfter([EstateManagerLeadMatchingTool::class])
                 ->setReplace(['estatemanagerleadmatchingtoolonoffice']),
         ];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel)
+    {
+        return $resolver
+            ->resolve(__DIR__.'/../Resources/config/routing.yml')
+            ->load(__DIR__.'/../Resources/config/routing.yml')
+            ;
     }
 }

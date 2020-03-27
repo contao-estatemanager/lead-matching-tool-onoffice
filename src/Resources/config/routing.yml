@@ -1,0 +1,7 @@
+leadmatchingonoffice_read:
+  path: /leadmatchingonoffice/{module}
+  defaults:
+    _controller: "EstateManagerLeadMatchingToolOnOffice:LeadMatchingOnOffice:read"
+    _scope: frontend
+    _token_check: false
+  methods: [GET]

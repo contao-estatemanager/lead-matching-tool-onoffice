@@ -1,0 +1,87 @@
+<div id="tl_maintenance_index" class="maintenance_<?= $this->isActive ? 'active' : 'inactive' ?>">
+
+  <?php if ($this->message): ?>
+    <div class="tl_message">
+      <?= $this->message ?>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($this->isRunning): ?>
+    <div id="tl_rebuild_index">
+      <p id="index_loading"><?= $this->loading ?></p>
+      <p id="index_complete" style="display:none"><?= $this->complete ?></p>
+      <p style="margin-bottom:0"><?= $this->content ?></p>
+    </div>
+
+    <script>
+      window.addEvent('domready', function() {
+        var queue = new Request.Queue({
+          onEnd: function() {
+              console.log('end');
+            $('index_loading').setStyle('display', 'none');
+            $('index_complete').setStyle('display', 'block');
+            $('index').set('disabled','');
+          },
+          concurrent: 1,
+          stopOnFailure: false
+        });
+        $$('.call').each(function(el, i) {
+          el.getAttribute('data-url') && queue.addRequest(i, new Request({
+            onSuccess: function() {
+              el.addClass('tl_green');
+            },
+            onFailure: function(xhr) {
+              el.addClass('tl_red');
+              el.set('text', '[' + xhr.status + '] ' + el.get('text'));
+            },
+            url: el.getAttribute('data-url')
+          }));
+        });
+        Object.values(queue.requests).invoke('get');
+      });
+    </script>
+
+    <form action="<?= $this->action ?>" class="tl_form" method="get">
+      <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+          <input type="hidden" name="do" value="maintenance">
+          <button type="submit" id="index" class="tl_submit" disabled><?= $this->indexContinue ?></button>
+        </div>
+      </div>
+    </form>
+
+  <?php else: ?>
+    <div id="tl_buttons">
+        <a href="<?=$this->backLink?>>'" class="header_back" title="<?=$this->backTitle?>" accesskey="b"><?=$this->backName?></a>
+    </div>
+    <form action="<?= $this->action ?>" class="tl_form" method="get">
+      <div class="tl_formbody_edit">
+        <input type="hidden" name="key" value="importSearchInquiries">
+        <input type="hidden" name="step" value="start">
+        <input type="hidden" name="do" value="searchcriteria">
+        <input type="hidden" name="rt" value="<?= REQUEST_TOKEN ?>">
+        <fieldset class="tl_tbox nolegend">
+          <div class="w50">
+            <h3><label for="ctrl_data"><?= $this->indexLabel ?></label></h3>
+            <select name="data" id="ctrl_data" class="tl_select">
+              <?php foreach ($this->options as $id => $name): ?>
+                <option value="<?= $id ?>"><?= $name ?></option>
+              <?php endforeach; ?>
+            </select>
+          </div>
+          <div class="w50 clr" style="min-height: 0">
+            <div id="ctrl_truncate" class="tl_checkbox_single_container">
+                <input type="checkbox" name="truncate" id="opt_truncate_0" class="tl_checkbox" value="1">
+                <label for="opt_truncate_0"><?= $this->indexTruncate ?></label>
+            </div>
+            <p class="tl_help tl_tip" title=""><?= $this->indexTruncateDescription ?></p>
+          </div>
+        </fieldset>
+      </div>
+      <div class="tl_submit_container">
+        <button type="submit" id="index" class="tl_submit"><?= $this->indexSubmit ?></button>
+      </div>
+    </form>
+  <?php endif; ?>
+
+</div>
