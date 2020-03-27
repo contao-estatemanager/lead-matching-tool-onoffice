@@ -87,11 +87,11 @@ class Importer
      *
      * @param $marketing
      * @param $offset
-     * @param bool $importRegion
+     * @param bool $importRegionConnections
      *
      * @return string
      */
-    public static function import($marketing, $offset, $importRegion=true)
+    public static function import($marketing, $offset, $importRegionConnections=false)
     {
         // get database instance
         $objDatabase = Database::getInstance();
@@ -117,6 +117,19 @@ class Importer
         // import data
         if(count($arrInquiries['data']['records']))
         {
+            // prepare object types
+            $objObjectTypes = ObjectTypeModel::findAll();
+            $arrObjectTypes = [];
+
+            if($objObjectTypes !== null)
+            {
+                while($objObjectTypes->next())
+                {
+                    $arrObjectTypes[ $objObjectTypes->oid ] = $objObjectTypes->id;
+                }
+            }
+
+            // begin database transaction
             $objDatabase->beginTransaction();
 
             foreach ($arrInquiries['data']['records'] as $inquiry)
@@ -149,11 +162,11 @@ class Importer
                     $record->country     = $arrData['range_land'];
                     $record->range       = $arrData['range'];
 
-                    if($importRegion && is_array($arrData['regionaler_zusatz']))
+                    // set region connection
+                    if($importRegionConnections && is_array($arrData['regionaler_zusatz']))
                     {
                         $arrRegions = [];
 
-                        // ToDo: Perfocmance verbessern
                         foreach ($arrData['regionaler_zusatz'] as $regionKey)
                         {
                             if($region = RegionModel::findOneBy('oid', $regionKey))
@@ -172,19 +185,12 @@ class Importer
                         $record->regions = serialize($arrRegions);
                     }
 
-                    if($arrData['objektart'])
+                    // set object type
+                    if(isset($arrObjectTypes[ $arrData['objektart'] ]))
                     {
-                        if($objecttype = ObjectTypeModel::findOneBy('oid', $arrData['objektart']))
-                        {
-                            // delete previous connections
-                            ObjectTypeConnectionModel::deleteByPidAndPtable($record->id, 'tl_searchcriteria');
-
-                            // save new connections
-                            ObjectType::saveConnectionRecord($objecttype->id, $record->id, 'tl_searchcriteria');
-
-                            $record->objectTypes = serialize([$objecttype->id]);
-                        }
+                        $record->objectType = $arrObjectTypes[ $arrData['objektart'] ];
                     }
+
                 }
 
                 $record->published = 1;

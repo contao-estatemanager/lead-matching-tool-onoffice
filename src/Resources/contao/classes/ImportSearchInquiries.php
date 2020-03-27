@@ -101,8 +101,6 @@ class ImportSearchInquiries extends \Backend
 
             if(\Input::get('truncate'))
             {
-                $this->Database->prepare('DELETE FROM tl_object_type_connection WHERE ptable="tl_searchcriteria"')->execute();
-
                 if(!!$importRegions)
                 {
                     $this->Database->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
