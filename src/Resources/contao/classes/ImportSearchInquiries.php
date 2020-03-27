@@ -47,7 +47,7 @@ class ImportSearchInquiries extends \Backend
 
                     if(\Input::get('truncate'))
                     {
-                        $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="miete"')->execute();
+                        $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="kauf"')->execute();
                     }
                     break;
                 case 'miete':
