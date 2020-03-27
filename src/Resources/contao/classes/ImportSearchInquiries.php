@@ -44,13 +44,28 @@ class ImportSearchInquiries extends \Backend
             {
                 case 'kauf':
                     $arrInquiriesBuy = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'kauf']], 0);
+
+                    if(\Input::get('truncate'))
+                    {
+                        $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="miete"')->execute();
+                    }
                     break;
                 case 'miete':
                     $arrInquiriesRent = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'miete']], 0);
+
+                    if(\Input::get('truncate'))
+                    {
+                        $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="miete"')->execute();
+                    }
                     break;
                 default:
                     $arrInquiriesBuy = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'kauf']], 0);
                     $arrInquiriesRent = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'miete']], 0);
+
+                    if(\Input::get('truncate'))
+                    {
+                        $this->Database->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
+                    }
             }
 
             $importRegions = \Input::get('regions');
@@ -86,7 +101,6 @@ class ImportSearchInquiries extends \Backend
 
             if(\Input::get('truncate'))
             {
-                $this->Database->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
                 $this->Database->prepare('DELETE FROM tl_object_type_connection WHERE ptable="tl_searchcriteria"')->execute();
 
                 if(!!$importRegions)
