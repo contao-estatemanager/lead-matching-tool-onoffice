@@ -76,6 +76,13 @@
             </div>
             <p class="tl_help tl_tip" title=""><?= $this->indexTruncateDescription ?></p>
           </div>
+          <div class="w50 clr" style="min-height: 0">
+            <div id="ctrl_regions" class="tl_checkbox_single_container">
+                <input type="checkbox" name="regions" id="opt_regions_0" class="tl_checkbox" value="1">
+                <label for="opt_regions_0"><?= $this->indexRegions ?></label>
+            </div>
+            <p class="tl_help tl_tip" title=""><?= $this->indexRegionsDescription ?></p>
+          </div>
         </fieldset>
       </div>
       <div class="tl_submit_container">

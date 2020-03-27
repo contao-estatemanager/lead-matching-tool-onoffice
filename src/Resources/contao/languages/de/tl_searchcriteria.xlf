@@ -52,6 +52,14 @@
         <source>Please note that all data records are deleted, regardless of whether they were created via import or manually.</source>
         <target>Bitte beachten Sie, dass alle Datensätze gelöscht werden, egal ob diese über den Import oder manuell angelegt wurden.</target>
       </trans-unit>
+      <trans-unit id="tl_searchcriteria.importRegion.0">
+        <source>Delete old records</source>
+        <target>Regionen-Verknüpfungen importieren</target>
+      </trans-unit>
+      <trans-unit id="tl_searchcriteria.importRegion.1">
+        <source>This option creates connections between the regions and the search query. This setting is mandatory if regions are selected via a select box, i.e. a 1:1 relationship exists. For example, in a radius search, the information is taken from the search query itself and does not need to be imported.</source>
+        <target>Diese Option stellt Verknüpfungen zwischen den Regionen und der Suchanfrage her. Diese Einstellung ist zwingend notwendig, wenn Regionen über eine Select-Box gewählt werden, also eine 1:1 Beziehung besteht. Bei einer Umkreissuche bspw. werden die Informationen aus der Suchanfrage selber gezogen und müssen nicht mit importiert werden.</target>
+      </trans-unit>
       <trans-unit id="tl_searchcriteria.all">
         <source>All</source>
         <target>Alle</target>

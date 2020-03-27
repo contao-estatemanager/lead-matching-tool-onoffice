@@ -43,13 +43,19 @@ class Importer
             @ini_set('memory_limit', -1);
         }
 
+        $importRegions = !!\Input::get('regions');
+
         // get database instance
         $objDatabase = Database::getInstance();
 
         // truncate data
         $objDatabase->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
-        $objDatabase->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
         $objDatabase->prepare('DELETE FROM tl_object_type_connection WHERE ptable="tl_searchcriteria"')->execute();
+
+        if($importRegions)
+        {
+            $objDatabase->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
+        }
 
         // request new data
         $arrInquiriesBuy = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'kauf']], 0);
@@ -59,7 +65,7 @@ class Importer
         {
             for($k=0; $k <= $arrInquiriesBuy['data']['meta']['cntabsolute'];)
             {
-                Importer::import('kauf', $k);
+                Importer::import('kauf', $k, !!\Input::get('regions'));
                 $k = $k + static::$limit;
             }
         }
@@ -68,7 +74,7 @@ class Importer
         {
             for($m=0; $m <= $arrInquiriesRent['data']['meta']['cntabsolute'];)
             {
-                Importer::import('miete', $k);
+                Importer::import('miete', $k, !!\Input::get('regions'));
                 $m = $m + static::$limit;
             }
         }
@@ -81,10 +87,11 @@ class Importer
      *
      * @param $marketing
      * @param $offset
+     * @param bool $importRegion
      *
      * @return string
      */
-    public static function import($marketing, $offset)
+    public static function import($marketing, $offset, $importRegion=true)
     {
         // get database instance
         $objDatabase = Database::getInstance();
@@ -142,12 +149,11 @@ class Importer
                     $record->country     = $arrData['range_land'];
                     $record->range       = $arrData['range'];
 
-                    if(is_array($arrData['regionaler_zusatz']))
+                    if($importRegion && is_array($arrData['regionaler_zusatz']))
                     {
                         $arrRegions = [];
 
                         // ToDo: Perfocmance verbessern
-                        // ToDo: DB Indexe setzen
                         foreach ($arrData['regionaler_zusatz'] as $regionKey)
                         {
                             if($region = RegionModel::findOneBy('oid', $regionKey))

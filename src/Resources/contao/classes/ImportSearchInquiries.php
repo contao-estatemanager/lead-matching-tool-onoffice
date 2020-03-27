@@ -28,7 +28,7 @@ class ImportSearchInquiries extends \Backend
                 @ini_set('memory_limit', -1);
             }
 
-            return Importer::import(\Input::get('marketing'), \Input::get('offset'));
+            return Importer::import(\Input::get('marketing'), \Input::get('offset'), !!\Input::get('regions'));
         }
 
         // create backend template
@@ -50,6 +50,7 @@ class ImportSearchInquiries extends \Backend
                     $arrInquiriesRent = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'miete']], 0);
             }
 
+            $importRegions = \Input::get('regions');
             $strBuffer = '';
 
             // Buy queue
@@ -59,7 +60,8 @@ class ImportSearchInquiries extends \Backend
 
                 for($k=0; $k <= $arrInquiriesBuy['data']['meta']['cntabsolute'];)
                 {
-                    $strBuffer .= '<span class="call" data-url="' . str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=kauf&offset=' . $k . '">Call [' . $k . ' - ' . ($k + Importer::$limit) . ']</span><br>';
+                    $url = str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=kauf&offset=' . $k . '&regions=' . $importRegions;
+                    $strBuffer .= '<a href="' . $url . '" target="_blank" class="call" data-url="' . $url . '">Call [' . $k . ' - ' . ($k + Importer::$limit) . ']</a><br>';
 
                     $k = $k + Importer::$limit;
                 }
@@ -72,7 +74,8 @@ class ImportSearchInquiries extends \Backend
 
                 for($m=0; $m <= $arrInquiriesRent['data']['meta']['cntabsolute'];)
                 {
-                    $strBuffer .= '<span class="call" data-url="' . str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=miete&offset=' . $m . '">Call [' . $m . ' - ' . ($m + Importer::$limit) . ']</span><br>';
+                    $url = str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=miete&offset=' . $m . '&regions=' . $importRegions;
+                    $strBuffer .= '<a href="' . $url . '" target="_blank" class="call" data-url="' . $url . '">Call [' . $m . ' - ' . ($m + Importer::$limit) . ']</a><br>';
 
                     $m = $m + Importer::$limit;
                 }
@@ -81,8 +84,12 @@ class ImportSearchInquiries extends \Backend
             if(\Input::get('truncate'))
             {
                 $this->Database->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
-                $this->Database->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
                 $this->Database->prepare('DELETE FROM tl_object_type_connection WHERE ptable="tl_searchcriteria"')->execute();
+
+                if(!!$importRegions)
+                {
+                    $this->Database->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
+                }
 
                 \Message::addConfirmation($GLOBALS['TL_LANG']['tl_searchcriteria']['deleteConfirm']);
             }
@@ -101,6 +108,8 @@ class ImportSearchInquiries extends \Backend
             $objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_searchcriteria']['data'];
             $objTemplate->indexTruncate = $GLOBALS['TL_LANG']['tl_searchcriteria']['truncate'][0];
             $objTemplate->indexTruncateDescription = $GLOBALS['TL_LANG']['tl_searchcriteria']['truncate'][1];
+            $objTemplate->indexRegions = $GLOBALS['TL_LANG']['tl_searchcriteria']['importRegion'][0];
+            $objTemplate->indexRegionsDescription = $GLOBALS['TL_LANG']['tl_searchcriteria']['importRegion'][1];
 
             $objTemplate->backTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
             $objTemplate->backName = $GLOBALS['TL_LANG']['MSC']['backBT'];
