@@ -12,6 +12,9 @@ class ImportSearchInquiries extends \Backend
         // handle import
         if(\Input::get('step') === 'call')
         {
+            // increase session lifetime
+            @ini_set('session.gc_maxlifetime',  36000);
+
             // disable execution time
             @ini_set('max_execution_time', 0);
 
