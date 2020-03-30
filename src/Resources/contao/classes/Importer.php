@@ -49,7 +49,7 @@ class Importer
 
             if(!isset($arrNewInquiry['data']['records'][0]['elements']))
             {
-                return Response('Create Search Criteria: No new records found');
+                return new Response('Create Search Criteria: No new records found');
             }
 
             $arrInquiry = $arrNewInquiry['data']['records'][0]['elements'];
