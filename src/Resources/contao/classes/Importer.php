@@ -151,8 +151,15 @@ class Importer
                     $record->area_to    = $arrData['wohnflaeche__bis'];
                     $record->room_from  = $arrData['anzahl_zimmer__von'];
                     $record->room_to    = $arrData['anzahl_zimmer__bis'];
-                    $record->price_from = $arrData['kaufpreis__von'];
-                    $record->price_to   = $arrData['kaufpreis__bis'];
+
+                    if($marketing === 'miete')
+                    {
+                        $record->price_from = $arrData['kaltmiete__von'];
+                        $record->price_to   = $arrData['kaltmiete__bis'];
+                    }else{
+                        $record->price_from = $arrData['kaufpreis__von'];
+                        $record->price_to   = $arrData['kaufpreis__bis'];
+                    }
 
                     // import region if regionaler_zusatz exists and write range fields into the record
                     $record->latitude    = $arrData['range_breitengrad'];
