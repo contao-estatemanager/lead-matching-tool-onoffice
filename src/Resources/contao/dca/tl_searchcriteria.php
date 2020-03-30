@@ -9,7 +9,7 @@ $GLOBALS['TL_DCA']['tl_searchcriteria']['fields']['oid'] = array
 (
     'inputType'               => 'text',
     'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-    'sql'                     => "varchar(255) NOT NULL default ''"
+    'sql'                     => "int(10) unsigned NOT NULL default 0"
 );
 
 $GLOBALS['TL_DCA']['tl_searchcriteria']['fields']['adresse'] = array

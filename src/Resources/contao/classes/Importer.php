@@ -9,9 +9,7 @@ use ContaoEstateManager\LeadMatchingTool\SearchcriteriaModel;
 use ContaoEstateManager\RegionEntity\Region;
 use ContaoEstateManager\RegionEntity\RegionModel;
 use ContaoEstateManager\RegionEntity\RegionConnectionModel;
-use ContaoEstateManager\ObjectTypeEntity\ObjectType;
 use ContaoEstateManager\ObjectTypeEntity\ObjectTypeModel;
-use ContaoEstateManager\ObjectTypeEntity\ObjectTypeConnectionModel;
 use Symfony\Component\HttpFoundation\Response;
 
 class Importer
@@ -23,7 +21,130 @@ class Importer
     public static $limit = 500;
 
     /**
-     * Import from server cron job
+     * Create new searchcriteria
+     */
+    public static function cronCreate()
+    {
+        // get database instance
+        $objDatabase = Database::getInstance();
+
+        $objLastInquiry = $objDatabase->execute('SELECT MAX(oid) as oid FROM tl_searchcriteria');
+
+        if($objLastInquiry)
+        {
+            $nextId = $objLastInquiry->oid + 2;
+            $arrNewInquiry = Importer::getSearchInquiry($nextId);
+
+            if(!isset($arrNewInquiry['data']['records'][0]['elements']))
+            {
+                $nextId = $objLastInquiry->oid + 1;
+                $arrNewInquiry = Importer::getSearchInquiry($nextId);
+            }
+
+            if(!isset($arrNewInquiry['data']['records'][0]['elements']))
+            {
+                $nextId = $objLastInquiry->oid + 3;
+                $arrNewInquiry = Importer::getSearchInquiry($nextId);
+            }
+
+            if(!isset($arrNewInquiry['data']['records'][0]['elements']))
+            {
+                return Response('Create Search Criteria: No new records found');
+            }
+
+            $arrInquiry = $arrNewInquiry['data']['records'][0]['elements'];
+
+            // prepare object types
+            $objObjectTypes = ObjectTypeModel::findAll();
+            $arrObjectTypes = [];
+
+            if($objObjectTypes !== null)
+            {
+                while($objObjectTypes->next())
+                {
+                    $arrObjectTypes[ $objObjectTypes->oid ] = $objObjectTypes->id;
+                }
+            }
+
+            // create new search criteria
+            $record = new SearchcriteriaModel();
+            $record->id = $objDatabase->getNextId('tl_searchcriteria');
+            $record->oid = $nextId;
+
+            // geo
+            if(isset($arrInquiry['Umkreis']))
+            {
+                $record->latitude    = $arrInquiry['Umkreis']['range_breitengrad'];
+                $record->longitude   = $arrInquiry['Umkreis']['range_laengengrad'];
+                $record->postalcode  = $arrInquiry['Umkreis']['range_plz'];
+                $record->city        = $arrInquiry['Umkreis']['range_ort'];
+                $record->country     = $arrInquiry['Umkreis']['range_land'];
+                $record->range       = $arrInquiry['Umkreis']['range'];
+            }
+
+            // marketing
+            if(isset($arrInquiry['vermarktungsart']))
+            {
+                $record->marketing  = $arrInquiry['vermarktungsart'][0];
+            }
+
+            // object types
+            if(isset($arrInquiry['objektart']))
+            {
+                $record->objectType  = $arrObjectTypes[ $arrInquiry['objektart'][0] ];
+            }
+
+            // prices
+            if(isset($arrInquiry['range_kaufpreis']))
+            {
+                $record->price_from = $arrInquiry['range_kaufpreis'][0];
+                $record->price_to   = $arrInquiry['range_kaufpreis'][1];
+            }
+
+            if(isset($arrInquiry['range_kaltmiete']))
+            {
+                $record->price_from = $arrInquiry['range_kaltmiete'][0];
+                $record->price_to   = $arrInquiry['range_kaltmiete'][1];
+            }
+
+            // area
+            if(isset($arrInquiry['range_wohnflaeche']))
+            {
+                $record->area_from  = $arrInquiry['range_wohnflaeche'][0];
+                $record->area_to    = $arrInquiry['range_wohnflaeche'][1];
+            }
+
+            // room
+            if(isset($arrInquiry['range_anzahl_zimmer']))
+            {
+                $record->room_from  = $arrInquiry['range_anzahl_zimmer'][0];
+                $record->room_to    = $arrInquiry['range_anzahl_zimmer'][1];
+            }
+
+            // meta data
+            $record->adresse    = $arrInquiry['_meta']['internaladdressid'];
+            $record->published  = 1;
+            $record->tstamp     = time();
+
+            // save
+            $record->save();
+        }
+
+        return new Response('<p>Record with the ID ' . $nextId . ' was created:<p/><pre>' . json_encode($arrNewInquiry['data']['records'][0]) . '</pre>');
+    }
+
+    /**
+     * Create new searchcriteria
+     */
+    public static function cronDelete()
+    {
+
+
+        return new Response('Delete Search Criteria: OK');
+    }
+
+    /**
+     * Import from cron job
      */
     public static function cronImport()
     {
@@ -44,17 +165,20 @@ class Importer
         }
 
         $importRegions = !!\Input::get('regions');
+        $truncate = !!\Input::get('truncate');
 
         // get database instance
         $objDatabase = Database::getInstance();
 
         // truncate data
-        $objDatabase->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
-        $objDatabase->prepare('DELETE FROM tl_object_type_connection WHERE ptable="tl_searchcriteria"')->execute();
-
-        if($importRegions)
+        if($truncate)
         {
-            $objDatabase->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
+            $objDatabase->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
+
+            if($importRegions)
+            {
+                $objDatabase->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
+            }
         }
 
         // request new data
@@ -236,5 +360,18 @@ class Importer
 
         $controller = new OnOfficeRead();
         return $controller->run('search', 'searchcriteria', null, $param, true);
+    }
+
+    /**
+     * Call onOffice API and return data
+
+     * @param $id
+     *
+     * @return mixed
+     */
+    public static function getSearchInquiry($id)
+    {
+        $controller = new OnOfficeRead();
+        return $controller->run('searchcriterias', null, null, ['mode' => 'searchcriteria', 'ids' => [$id]], true);
     }
 }

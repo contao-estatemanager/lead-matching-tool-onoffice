@@ -29,6 +29,12 @@ class LeadMatchingOnOfficeController extends Controller
             case 'import':
                 return Importer::cronImport();
                 break;
+            case 'create':
+                return Importer::cronCreate();
+                break;
+            case 'delete':
+                return Importer::cronDelete();
+                break;
         }
 
         return new Response('Nothing happen');
