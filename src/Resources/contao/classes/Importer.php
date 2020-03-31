@@ -52,95 +52,70 @@ class Importer
                 return new Response('Create Search Criteria: No new records found');
             }
 
+            // inquiry data
             $arrInquiry = $arrNewInquiry['data']['records'][0]['elements'];
-
-            // prepare object types
-            $objObjectTypes = ObjectTypeModel::findAll();
-            $arrObjectTypes = [];
-
-            if($objObjectTypes !== null)
-            {
-                while($objObjectTypes->next())
-                {
-                    $arrObjectTypes[ $objObjectTypes->oid ] = $objObjectTypes->id;
-                }
-            }
 
             // create new search criteria
             $record = new SearchcriteriaModel();
             $record->id = $objDatabase->getNextId('tl_searchcriteria');
             $record->oid = $nextId;
 
-            // geo
-            if(isset($arrInquiry['Umkreis']))
-            {
-                $record->latitude    = $arrInquiry['Umkreis']['range_breitengrad'];
-                $record->longitude   = $arrInquiry['Umkreis']['range_laengengrad'];
-                $record->postalcode  = $arrInquiry['Umkreis']['range_plz'];
-                $record->city        = $arrInquiry['Umkreis']['range_ort'];
-                $record->country     = $arrInquiry['Umkreis']['range_land'];
-                $record->range       = $arrInquiry['Umkreis']['range'];
-            }
-
-            // marketing
-            if(isset($arrInquiry['vermarktungsart']))
-            {
-                $record->marketing  = $arrInquiry['vermarktungsart'][0];
-            }
-
-            // object types
-            if(isset($arrInquiry['objektart']))
-            {
-                $record->objectType  = $arrObjectTypes[ $arrInquiry['objektart'][0] ];
-            }
-
-            // prices
-            if(isset($arrInquiry['range_kaufpreis']))
-            {
-                $record->price_from = $arrInquiry['range_kaufpreis'][0];
-                $record->price_to   = $arrInquiry['range_kaufpreis'][1];
-            }
-
-            if(isset($arrInquiry['range_kaltmiete']))
-            {
-                $record->price_from = $arrInquiry['range_kaltmiete'][0];
-                $record->price_to   = $arrInquiry['range_kaltmiete'][1];
-            }
-
-            // area
-            if(isset($arrInquiry['range_wohnflaeche']))
-            {
-                $record->area_from  = $arrInquiry['range_wohnflaeche'][0];
-                $record->area_to    = $arrInquiry['range_wohnflaeche'][1];
-            }
-
-            // room
-            if(isset($arrInquiry['range_anzahl_zimmer']))
-            {
-                $record->room_from  = $arrInquiry['range_anzahl_zimmer'][0];
-                $record->room_to    = $arrInquiry['range_anzahl_zimmer'][1];
-            }
-
-            // meta data
-            $record->adresse    = $arrInquiry['_meta']['internaladdressid'];
+            static::setModelDataFromOnOfficeResponse($record, $arrInquiry);
+            
             $record->published  = 1;
             $record->tstamp     = time();
 
             // save
             $record->save();
+
+            return new Response('<p>Record with the ID ' . $nextId . ' was created:<p/><pre>' . json_encode($arrNewInquiry['data']['records'][0]) . '</pre>');
         }
 
-        return new Response('<p>Record with the ID ' . $nextId . ' was created:<p/><pre>' . json_encode($arrNewInquiry['data']['records'][0]) . '</pre>');
+        return new Response('<p>Could not find data</p>');
     }
 
     /**
-     * Create new searchcriteria
+     * Update or delete old searchcriteria
      */
-    public static function cronDelete()
+    public static function cronUpdate()
     {
+        // get database instance
+        $objDatabase = Database::getInstance();
 
+        $objInquiry = $objDatabase->execute('SELECT id, oid, updated FROM tl_searchcriteria ORDER BY updated ASC, oid ASC LIMIT 0,1');
 
-        return new Response('Delete Search Criteria: OK');
+        if($objInquiry)
+        {
+            $arrOldInquiry = Importer::getSearchInquiry($objInquiry->oid);
+
+            // update
+            if(isset($arrOldInquiry['data']['records'][0]['elements']))
+            {
+                $arrInquiry = $arrOldInquiry['data']['records'][0]['elements'];
+
+                $record = SearchcriteriaModel::findById($objInquiry->id);
+                $record->updated = $objInquiry->updated + 1;
+
+                static::setModelDataFromOnOfficeResponse($record, $arrInquiry);
+
+                $record->tstamp = time();
+
+                // save
+                $record->save();
+
+                return new Response('<p>Record with the ID ' . $objInquiry->oid . ' was updated:<p/><pre>' . json_encode($arrOldInquiry['data']['records'][0]) . '</pre>');
+            }
+
+            // delete
+            else
+            {
+                $objDatabase->prepare('DELETE FROM tl_searchcriteria WHERE id=?')->execute($objInquiry->id);
+
+                return new Response('<p>Record with the ID ' . $objInquiry->oid . ' was deleted<p/>');
+            }
+        }
+
+        return new Response('<p>Could not find data</p>');
     }
 
     /**
@@ -338,6 +313,79 @@ class Importer
 
         // return status and time
         return sprintf("Request onOffice: %s<br/>Parse and import data: %s", $onOfficeLog, $importLog);
+    }
+
+    /**
+     * Writes the onOffice response fields to the model
+     * @param $record
+     * @param $arrData
+     */
+    public static function setModelDataFromOnOfficeResponse(&$record, $arrData)
+    {
+        // prepare object types
+        $objObjectTypes = ObjectTypeModel::findAll();
+        $arrObjectTypes = [];
+
+        if($objObjectTypes !== null)
+        {
+            while($objObjectTypes->next())
+            {
+                $arrObjectTypes[ $objObjectTypes->oid ] = $objObjectTypes->id;
+            }
+        }
+
+        // geo
+        if(isset($arrData['Umkreis']))
+        {
+            $record->latitude    = $arrData['Umkreis']['range_breitengrad'];
+            $record->longitude   = $arrData['Umkreis']['range_laengengrad'];
+            $record->postalcode  = $arrData['Umkreis']['range_plz'];
+            $record->city        = $arrData['Umkreis']['range_ort'];
+            $record->country     = $arrData['Umkreis']['range_land'];
+            $record->range       = $arrData['Umkreis']['range'];
+        }
+
+        // marketing
+        if(isset($arrData['vermarktungsart']))
+        {
+            $record->marketing  = $arrData['vermarktungsart'][0];
+        }
+
+        // object types
+        if(isset($arrData['objektart']))
+        {
+            $record->objectType  = $arrObjectTypes[ $arrData['objektart'][0] ];
+        }
+
+        // prices
+        if(isset($arrData['range_kaufpreis']))
+        {
+            $record->price_from = $arrData['range_kaufpreis'][0];
+            $record->price_to   = $arrData['range_kaufpreis'][1];
+        }
+
+        if(isset($arrData['range_kaltmiete']))
+        {
+            $record->price_from = $arrData['range_kaltmiete'][0];
+            $record->price_to   = $arrData['range_kaltmiete'][1];
+        }
+
+        // area
+        if(isset($arrData['range_wohnflaeche']))
+        {
+            $record->area_from  = $arrData['range_wohnflaeche'][0];
+            $record->area_to    = $arrData['range_wohnflaeche'][1];
+        }
+
+        // room
+        if(isset($arrData['range_anzahl_zimmer']))
+        {
+            $record->room_from  = $arrData['range_anzahl_zimmer'][0];
+            $record->room_to    = $arrData['range_anzahl_zimmer'][1];
+        }
+
+        // meta data
+        $record->adresse    = $arrData['_meta']['internaladdressid'];
     }
 
     /**

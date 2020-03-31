@@ -18,3 +18,8 @@ $GLOBALS['TL_DCA']['tl_searchcriteria']['fields']['adresse'] = array
     'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
     'sql'                     => "varchar(255) NOT NULL default ''"
 );
+
+$GLOBALS['TL_DCA']['tl_searchcriteria']['fields']['updated'] = array
+(
+    'sql'                     => "int(10) unsigned NOT NULL default 0"
+);
