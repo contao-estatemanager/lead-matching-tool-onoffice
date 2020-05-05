@@ -4,6 +4,7 @@
 namespace ContaoEstateManager\LeadMatchingToolOnOffice;
 
 use Contao\Database;
+use Contao\Input;
 use Oveleon\ContaoOnofficeApiBundle\OnOfficeRead;
 use ContaoEstateManager\LeadMatchingTool\SearchcriteriaModel;
 use ContaoEstateManager\RegionEntity\Region;
@@ -61,7 +62,7 @@ class Importer
             $record->oid = $nextId;
 
             static::setModelDataFromOnOfficeResponse($record, $arrInquiry);
-            
+
             $record->published  = 1;
             $record->tstamp     = time();
 
@@ -139,8 +140,8 @@ class Importer
             @ini_set('memory_limit', -1);
         }
 
-        $importRegions = !!\Input::get('regions');
-        $truncate = !!\Input::get('truncate');
+        $importRegions = !!Input::get('regions');
+        $truncate = !!Input::get('truncate');
 
         // get database instance
         $objDatabase = Database::getInstance();
@@ -164,7 +165,7 @@ class Importer
         {
             for($k=0; $k <= $arrInquiriesBuy['data']['meta']['cntabsolute'];)
             {
-                Importer::import('kauf', $k, !!\Input::get('regions'));
+                Importer::import('kauf', $k, !!Input::get('regions'));
                 $k = $k + static::$limit;
             }
         }
@@ -173,7 +174,7 @@ class Importer
         {
             for($m=0; $m <= $arrInquiriesRent['data']['meta']['cntabsolute'];)
             {
-                Importer::import('miete', $k, !!\Input::get('regions'));
+                Importer::import('miete', $k, !!Input::get('regions'));
                 $m = $m + static::$limit;
             }
         }

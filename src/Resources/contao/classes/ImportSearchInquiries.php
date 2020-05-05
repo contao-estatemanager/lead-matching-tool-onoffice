@@ -2,7 +2,14 @@
 
 namespace ContaoEstateManager\LeadMatchingToolOnOffice;
 
-class ImportSearchInquiries extends \Backend
+use Contao\Backend;
+use Contao\BackendTemplate;
+use Contao\Environment;
+use Contao\Input;
+use Contao\Message;
+use Contao\StringUtil;
+
+class ImportSearchInquiries extends Backend
 {
     /**
      * Import onoffice search criteria
@@ -10,7 +17,7 @@ class ImportSearchInquiries extends \Backend
     public function importInquiries()
     {
         // handle import
-        if(\Input::get('step') === 'call')
+        if(Input::get('step') === 'call')
         {
             // increase session lifetime
             @ini_set('session.gc_maxlifetime',  36000);
@@ -31,21 +38,21 @@ class ImportSearchInquiries extends \Backend
                 @ini_set('memory_limit', -1);
             }
 
-            return Importer::import(\Input::get('marketing'), \Input::get('offset'), !!\Input::get('regions'));
+            return Importer::import(Input::get('marketing'), Input::get('offset'), !!Input::get('regions'));
         }
 
         // create backend template
-        $objTemplate = new \BackendTemplate('be_sync_onoffice_inquiries');
+        $objTemplate = new BackendTemplate('be_sync_onoffice_inquiries');
 
         // show queue
-        if(\Input::get('step') === 'start')
+        if(Input::get('step') === 'start')
         {
-            switch (\Input::get('data'))
+            switch (Input::get('data'))
             {
                 case 'kauf':
                     $arrInquiriesBuy = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'kauf']], 0);
 
-                    if(\Input::get('truncate'))
+                    if(Input::get('truncate'))
                     {
                         $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="kauf"')->execute();
                     }
@@ -53,7 +60,7 @@ class ImportSearchInquiries extends \Backend
                 case 'miete':
                     $arrInquiriesRent = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'miete']], 0);
 
-                    if(\Input::get('truncate'))
+                    if(Input::get('truncate'))
                     {
                         $this->Database->prepare('DELETE FROM tl_searchcriteria WHERE marketing="miete"')->execute();
                     }
@@ -62,13 +69,13 @@ class ImportSearchInquiries extends \Backend
                     $arrInquiriesBuy = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'kauf']], 0);
                     $arrInquiriesRent = Importer::getSearchInquiries(['searchdata' => ['vermarktungsart' => 'miete']], 0);
 
-                    if(\Input::get('truncate'))
+                    if(Input::get('truncate'))
                     {
                         $this->Database->prepare('TRUNCATE TABLE tl_searchcriteria')->execute();
                     }
             }
 
-            $importRegions = \Input::get('regions');
+            $importRegions = Input::get('regions');
             $strBuffer = '';
 
             // Buy queue
@@ -78,7 +85,7 @@ class ImportSearchInquiries extends \Backend
 
                 for($k=0; $k <= $arrInquiriesBuy['data']['meta']['cntabsolute'];)
                 {
-                    $url = str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=kauf&offset=' . $k . '&regions=' . $importRegions;
+                    $url = str_replace('&step=start', '', Environment::get('uri')) . '&step=call&marketing=kauf&offset=' . $k . '&regions=' . $importRegions;
                     $strBuffer .= '<a href="' . $url . '" target="_blank" class="call" data-url="' . $url . '">Call [' . $k . ' - ' . ($k + Importer::$limit) . ']</a><br>';
 
                     $k = $k + Importer::$limit;
@@ -92,21 +99,21 @@ class ImportSearchInquiries extends \Backend
 
                 for($m=0; $m <= $arrInquiriesRent['data']['meta']['cntabsolute'];)
                 {
-                    $url = str_replace('&step=start', '', \Environment::get('uri')) . '&step=call&marketing=miete&offset=' . $m . '&regions=' . $importRegions;
+                    $url = str_replace('&step=start', '', Environment::get('uri')) . '&step=call&marketing=miete&offset=' . $m . '&regions=' . $importRegions;
                     $strBuffer .= '<a href="' . $url . '" target="_blank" class="call" data-url="' . $url . '">Call [' . $m . ' - ' . ($m + Importer::$limit) . ']</a><br>';
 
                     $m = $m + Importer::$limit;
                 }
             }
 
-            if(\Input::get('truncate'))
+            if(Input::get('truncate'))
             {
                 if(!!$importRegions)
                 {
                     $this->Database->prepare('DELETE FROM tl_region_connection WHERE ptable="tl_searchcriteria"')->execute();
                 }
 
-                \Message::addConfirmation($GLOBALS['TL_LANG']['tl_searchcriteria']['deleteConfirm']);
+                Message::addConfirmation($GLOBALS['TL_LANG']['tl_searchcriteria']['deleteConfirm']);
             }
 
             $objTemplate->content = $strBuffer;
@@ -117,7 +124,7 @@ class ImportSearchInquiries extends \Backend
         // show overview
         else
         {
-            \Message::addInfo($GLOBALS['TL_LANG']['tl_searchcriteria']['importConfirm']);
+            Message::addInfo($GLOBALS['TL_LANG']['tl_searchcriteria']['importConfirm']);
 
             $objTemplate->indexSubmit = $GLOBALS['TL_LANG']['tl_searchcriteria']['importSearchInquiries'][0];
             $objTemplate->indexLabel = $GLOBALS['TL_LANG']['tl_searchcriteria']['data'];
@@ -126,9 +133,9 @@ class ImportSearchInquiries extends \Backend
             $objTemplate->indexRegions = $GLOBALS['TL_LANG']['tl_searchcriteria']['importRegion'][0];
             $objTemplate->indexRegionsDescription = $GLOBALS['TL_LANG']['tl_searchcriteria']['importRegion'][1];
 
-            $objTemplate->backTitle = \StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
+            $objTemplate->backTitle = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']);
             $objTemplate->backName = $GLOBALS['TL_LANG']['MSC']['backBT'];
-            $objTemplate->backLink = ampersand(str_replace('&key=importSearchInquiries', '', \Environment::get('request')));
+            $objTemplate->backLink = ampersand(str_replace('&key=importSearchInquiries', '', Environment::get('request')));
 
             $objTemplate->options = [
                 ''      => $GLOBALS['TL_LANG']['tl_searchcriteria']['all'],
@@ -139,8 +146,8 @@ class ImportSearchInquiries extends \Backend
 
         $objTemplate->loading = $GLOBALS['TL_LANG']['tl_searchcriteria']['indexLoading'];
         $objTemplate->complete = $GLOBALS['TL_LANG']['tl_searchcriteria']['indexComplete'];
-        $objTemplate->message = \Message::generate();
-        $objTemplate->action = ampersand(\Environment::get('request'));
+        $objTemplate->message = Message::generate();
+        $objTemplate->action = ampersand(Environment::get('request'));
 
         return $objTemplate->parse();
     }
