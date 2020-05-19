@@ -13,69 +13,83 @@ $GLOBALS['TL_DCA']['tl_lead_matching']['palettes']['onoffice'] = '{title_legend}
 // Add field options
 $GLOBALS['TL_DCA']['tl_lead_matching']['fields']['type']['options'][] = 'onoffice';
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingType']['options_callback']  = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getMarketingTypeFields');
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingTypes']['options_callback'] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getMarketingTypeFields');
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['listMetaFields']['options_callback'] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaRangeFieldOptions');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingType']['options_callback']  = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getMarketingTypeFields');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingTypes']['options_callback'] = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getMarketingTypeFields');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['listMetaFields']['options_callback'] = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaRangeFieldOptions');
 
 // Add field callbacks
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingTypes']['save_callback'][] = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'saveMarketingTypes');
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['objectTypes']['save_callback'][]    = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'saveObjectTypes');
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['regions']['save_callback'][]        = array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'saveRegions');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['marketingTypes']['save_callback'][] = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'saveMarketingTypes');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['objectTypes']['save_callback'][]    = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'saveObjectTypes');
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['regions']['save_callback'][]        = array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'saveRegions');
 
 // Add fields
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_marketingType'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_marketingType'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_marketingType'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50 clr'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_objectTypes'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_objectTypes'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_objectTypes'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_regions'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_regions'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_regions'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_room'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_room'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_room'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_area'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_area'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_area'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
 // ToDo: Create fields dynamic to map any kind of marketing type or use something like multicolumnwizard
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_price_kauf'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_price_kauf'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_price_kauf'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
 
-$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_price_miete'] = array(
+$GLOBALS['TL_DCA']['tl_lead_matching']['fields']['mapping_price_miete'] = array
+(
     'label'            => &$GLOBALS['TL_LANG']['tl_lead_matching']['mapping_price_miete'],
+    'exclude'          => true,
     'inputType'        => 'select',
-    'options_callback' => array('\\ContaoEstateManager\\LeadMatchingToolOnOffice\\LeadMatching', 'getSearchCriteriaFieldOptions'),
+    'options_callback' => array('ContaoEstateManager\LeadMatchingToolOnOffice\LeadMatching', 'getSearchCriteriaFieldOptions'),
     'eval'             => array('mandatory'=>true, 'tl_class'=> 'w50'),
     'sql'              => "varchar(255) NOT NULL default ''"
 );
