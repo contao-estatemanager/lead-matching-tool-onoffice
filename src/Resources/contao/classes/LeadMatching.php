@@ -34,7 +34,7 @@ class LeadMatching extends Backend
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         $_GET['limit'] = 0;
 
@@ -62,9 +62,9 @@ class LeadMatching extends Backend
      * @param $offset
      * @param $objModule
      *
-     * @return array
+     * @return array|null
      */
-    public function fetch($config, $limit, $offset, $objModule)
+    public function fetch($config, $limit, $offset, $objModule): ?array
     {
         // prepare parameters
         $_GET['searchdata']   = $this->buildFilterQuery($config, 'session');
@@ -95,6 +95,8 @@ class LeadMatching extends Backend
             // return records
             return $data['data'];
         }
+
+        return null;
     }
 
     /**
@@ -106,7 +108,7 @@ class LeadMatching extends Backend
      *
      * @return array
      */
-    public function parseItems($config, $arrItems, $objModule)
+    public function parseItems($config, $arrItems, $objModule): ?array
     {
         // get translation values
         $this->arrTranslations = $this->getSearchCriteriaFieldTranslations();
@@ -115,11 +117,11 @@ class LeadMatching extends Backend
 
         if ($limit < 1)
         {
-            return array();
+            return null;
         }
 
         $count = 0;
-        $arrItemCollection = array();
+        $arrItemCollection = null;
 
         foreach ($arrItems['records'] as $item)
         {
@@ -140,7 +142,7 @@ class LeadMatching extends Backend
      *
      * @return string
      */
-    private function parseItem($config, $arrItem, $strClass, $intCount, $objModule)
+    private function parseItem($config, $arrItem, $strClass, $intCount, $objModule): string
     {
         $objTemplate = new FrontendTemplate($config->listItemTemplate);
         $objTemplate->setData($arrItem);
@@ -616,11 +618,11 @@ class LeadMatching extends Backend
      * @param $config
      * @param string $method
      *
-     * @return array
+     * @return array|null
      */
-    private function buildFilterQuery($config, $method='get')
+    private function buildFilterQuery($config, $method='get'): ?array
     {
-        $return = array();
+        $return = null;
         $arrMappings = array(
             'objectTypes'           => 'mapping_objectTypes',
             'regions'               => 'mapping_regions',
@@ -684,7 +686,7 @@ class LeadMatching extends Backend
      *
      * @return int
      */
-    public function onLoadCount($config, $objModule)
+    public function onLoadCount($config, $objModule): int
     {
         // return value from session on form submit
         if (Input::post('FORM_SUBMIT') == 'form_estate_' . $objModule->id && isset($_SESSION['LEAD_MATCHING']['previousCount']))
@@ -706,7 +708,7 @@ class LeadMatching extends Backend
      *
      * @return int
      */
-    public function onReadCount($config, $currParam, $objController)
+    public function onReadCount($config, $currParam, $objController): int
     {
         $_GET['searchdata'] = $this->buildFilterQuery($config);
 
@@ -735,7 +737,8 @@ class LeadMatching extends Backend
      *
      * @return array|string
      */
-    private function returnDefaultOptions($dc, $callback=null){
+    private function returnDefaultOptions($dc, $callback=null)
+    {
         $field = $GLOBALS['TL_DCA'][ $dc->table ]['fields'][ $dc->field ];
 
         if(isset($field['options']))
