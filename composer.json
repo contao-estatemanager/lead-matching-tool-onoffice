@@ -6,14 +6,14 @@
   "license":"proprietary",
   "authors":[
     {
-      "name":"Oveleon",
-      "homepage":"https://www.oveleon.de/",
+      "name":"Daniele Sciannimanica",
+      "homepage":"https://github.com/doishub",
       "role":"Developer"
     }
   ],
   "require":{
     "oveleon/contao-onoffice-api-bundle": "^1.0",
-    "contao-estatemanager/lead-matching-tool": "dev-master",
+    "contao-estatemanager/lead-matching-tool": "^1.0",
     "contao-estatemanager/region-entity-onoffice": "^1.0",
     "contao-estatemanager/object-type-entity-onoffice": "^1.0"
   },

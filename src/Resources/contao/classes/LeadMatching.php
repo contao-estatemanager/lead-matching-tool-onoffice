@@ -10,12 +10,17 @@
 
 namespace ContaoEstateManager\LeadMatchingToolOnOffice;
 
+use Contao\Backend;
+use Contao\Database;
+use Contao\FrontendTemplate;
+use Contao\Input;
+use Contao\StringUtil;
 use ContaoEstateManager\ObjectTypeEntity\ObjectTypeModel;
 use ContaoEstateManager\RegionEntity\RegionModel;
 use Oveleon\ContaoOnofficeApiBundle\OnOfficeRead;
 use Oveleon\ContaoOnofficeApiBundle\Fieldset;
 
-class LeadMatching extends \Backend
+class LeadMatching extends Backend
 {
     /**
      * Array with onoffice translation values
@@ -29,7 +34,7 @@ class LeadMatching extends \Backend
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         $_GET['limit'] = 0;
 
@@ -57,16 +62,16 @@ class LeadMatching extends \Backend
      * @param $offset
      * @param $objModule
      *
-     * @return array
+     * @return array|null
      */
-    public function fetch($config, $limit, $offset, $objModule)
+    public function fetch($config, $limit, $offset, $objModule): ?array
     {
         // prepare parameters
         $_GET['searchdata']   = $this->buildFilterQuery($config, 'session');
         $_GET['limit']        = $limit;
         $_GET['offset']       = $offset;
 
-        $outputFields = \StringUtil::deserialize($config->listMetaFields);
+        $outputFields = StringUtil::deserialize($config->listMetaFields);
 
         if($outputFields !== null)
         {
@@ -90,6 +95,8 @@ class LeadMatching extends \Backend
             // return records
             return $data['data'];
         }
+
+        return null;
     }
 
     /**
@@ -101,7 +108,7 @@ class LeadMatching extends \Backend
      *
      * @return array
      */
-    public function parseItems($config, $arrItems, $objModule)
+    public function parseItems($config, $arrItems, $objModule): ?array
     {
         // get translation values
         $this->arrTranslations = $this->getSearchCriteriaFieldTranslations();
@@ -110,11 +117,11 @@ class LeadMatching extends \Backend
 
         if ($limit < 1)
         {
-            return array();
+            return null;
         }
 
         $count = 0;
-        $arrItemCollection = array();
+        $arrItemCollection = null;
 
         foreach ($arrItems['records'] as $item)
         {
@@ -135,15 +142,15 @@ class LeadMatching extends \Backend
      *
      * @return string
      */
-    private function parseItem($config, $arrItem, $strClass, $intCount, $objModule)
+    private function parseItem($config, $arrItem, $strClass, $intCount, $objModule): string
     {
-        $objTemplate = new \FrontendTemplate($config->listItemTemplate);
+        $objTemplate = new FrontendTemplate($config->listItemTemplate);
         $objTemplate->setData($arrItem);
         $objTemplate->class = $strClass;
 
         $arrGroups = array();
         $arrFields = array();
-        $listFields = \StringUtil::deserialize($config->listMetaFields);
+        $listFields = StringUtil::deserialize($config->listMetaFields);
 
         foreach ($listFields as $field)
         {
@@ -499,7 +506,7 @@ class LeadMatching extends \Backend
             return $varValue;
         }
 
-        $arrChoosedTypes = \StringUtil::deserialize($varValue);
+        $arrChoosedTypes = StringUtil::deserialize($varValue);
 
         if($arrChoosedTypes === null)
         {
@@ -520,7 +527,7 @@ class LeadMatching extends \Backend
             }
 
             // Store the new object type data
-            \Database::getInstance()->prepare("UPDATE tl_lead_matching SET objectTypesData=? WHERE id=?")
+            Database::getInstance()->prepare("UPDATE tl_lead_matching SET objectTypesData=? WHERE id=?")
                 ->execute(serialize($arrOptions), $dc->id);
         }
 
@@ -541,7 +548,7 @@ class LeadMatching extends \Backend
             return $varValue;
         }
 
-        $arrChoosedTypes = \StringUtil::deserialize($varValue);
+        $arrChoosedTypes = StringUtil::deserialize($varValue);
 
         if($arrChoosedTypes === null)
         {
@@ -562,7 +569,7 @@ class LeadMatching extends \Backend
             }
 
             // Store the new object type data
-            \Database::getInstance()->prepare("UPDATE tl_lead_matching SET regionsData=? WHERE id=?")
+            Database::getInstance()->prepare("UPDATE tl_lead_matching SET regionsData=? WHERE id=?")
                 ->execute(serialize($arrOptions), $dc->id);
         }
 
@@ -584,7 +591,7 @@ class LeadMatching extends \Backend
         }
 
         $arrMarketingTypes = $this->getMarketingTypeFields();
-        $arrChoosedTypes   = \StringUtil::deserialize($varValue);
+        $arrChoosedTypes   = StringUtil::deserialize($varValue);
 
         if($arrChoosedTypes === null)
         {
@@ -599,7 +606,7 @@ class LeadMatching extends \Backend
         }
 
         // Store the new object type data
-        \Database::getInstance()->prepare("UPDATE tl_lead_matching SET marketingTypesData=? WHERE id=?")
+        Database::getInstance()->prepare("UPDATE tl_lead_matching SET marketingTypesData=? WHERE id=?")
             ->execute(serialize($arrOptions), $dc->id);
 
         return $varValue;
@@ -611,11 +618,11 @@ class LeadMatching extends \Backend
      * @param $config
      * @param string $method
      *
-     * @return array
+     * @return array|null
      */
-    private function buildFilterQuery($config, $method='get')
+    private function buildFilterQuery($config, $method='get'): ?array
     {
-        $return = array();
+        $return = null;
         $arrMappings = array(
             'objectTypes'           => 'mapping_objectTypes',
             'regions'               => 'mapping_regions',
@@ -665,7 +672,7 @@ class LeadMatching extends \Backend
         {
             case 'get':
             case 'post':
-                return \Input::$method($field);
+                return Input::$method($field);
             case 'session':
                 return $_SESSION['LEAD_MATCHING']['estate'][$field];
         }
@@ -679,10 +686,10 @@ class LeadMatching extends \Backend
      *
      * @return int
      */
-    public function onLoadCount($config, $objModule)
+    public function onLoadCount($config, $objModule): int
     {
         // return value from session on form submit
-        if (\Input::post('FORM_SUBMIT') == 'form_estate_' . $objModule->id && isset($_SESSION['LEAD_MATCHING']['previousCount']))
+        if (Input::post('FORM_SUBMIT') == 'form_estate_' . $objModule->id && isset($_SESSION['LEAD_MATCHING']['previousCount']))
         {
             return $_SESSION['LEAD_MATCHING']['previousCount'];
         }
@@ -701,7 +708,7 @@ class LeadMatching extends \Backend
      *
      * @return int
      */
-    public function onReadCount($config, $currParam, $objController)
+    public function onReadCount($config, $currParam, $objController): int
     {
         $_GET['searchdata'] = $this->buildFilterQuery($config);
 
@@ -730,7 +737,8 @@ class LeadMatching extends \Backend
      *
      * @return array|string
      */
-    private function returnDefaultOptions($dc, $callback=null){
+    private function returnDefaultOptions($dc, $callback=null)
+    {
         $field = $GLOBALS['TL_DCA'][ $dc->table ]['fields'][ $dc->field ];
 
         if(isset($field['options']))
